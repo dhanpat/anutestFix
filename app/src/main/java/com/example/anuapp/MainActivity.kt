@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.genai.Client
-import com.google.genai.types.Content
 import com.google.genai.types.GenerateContentResponse
 import kotlinx.coroutines.*
 
@@ -31,10 +30,10 @@ class MainActivity : AppCompatActivity() {
 
         val navView = findViewById<NavigationView>(R.id.navigationView)
         navView.setNavigationItemSelectedListener { menuItem ->
-            when(menuItem.itemId) {
+            when (menuItem.itemId) {
                 R.id.nav_search -> {
                     drawerLayout.closeDrawers()
-                    resultContainer.scrollTo(0,0)
+                    resultContainer.scrollTo(0, 0)
                     true
                 }
                 else -> false
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         btnSearch.setOnClickListener {
             val query = etInput.text.toString().trim()
-            if(query.isNotEmpty()) {
+            if (query.isNotEmpty()) {
                 performSearch(query)
             } else {
                 Toast.makeText(this, "Enter a word", Toast.LENGTH_SHORT).show()
@@ -59,32 +58,27 @@ class MainActivity : AppCompatActivity() {
             try {
                 val prompt = "Translate '$query' to Hindi and English meanings"
 
-                // Initialize Gemini Client (hardcoded API key)
+                // Initialize Gemini client
                 val client = Client.builder()
-                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY")  // <-- replace with your key
+                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // <-- replace with your key
                     .build()
 
-                // Wrap prompt in Content object
-                val content = Content.builder()
-                    .text(prompt)
-                    .build()
-
-                // Java-style generateContent call
+                // Send prompt as string (simplest for Kotlin)
                 val response: GenerateContentResponse = client.models.generateContent(
                     "gemini-2.5-flash",
-                    listOf(content),
+                    prompt,
                     null
                 )
 
-                // Java-style getter for response text
-                val resultText = response.getText()
+                // Extract text from first candidate
+                val resultText = response.getCandidates()[0].getContent().getText()
 
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     val tv = TextView(this@MainActivity)
                     tv.text = resultText
                     tv.textSize = 18f
-                    tv.setPadding(8,8,8,8)
+                    tv.setPadding(8, 8, 8, 8)
                     resultContainer.addView(tv)
                 }
 
