@@ -58,19 +58,18 @@ class MainActivity : AppCompatActivity() {
             try {
                 val prompt = "Translate '$query' to Hindi and English meanings"
 
-                // Initialize Gemini client
                 val client = Client.builder()
-                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // <-- replace with your key
+                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // Replace with your Gemini API key
                     .build()
 
-                // Call Gemini with string prompt
+                // Latest Gemini API usage: string input
                 val response: GenerateContentResponse = client.models.generateContent(
                     "gemini-2.5-flash",
                     prompt,
                     null
                 )
 
-                // Extract text directly
+                // Extract result text
                 val resultText = response.text()
 
                 withContext(Dispatchers.Main) {
