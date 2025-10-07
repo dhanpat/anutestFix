@@ -59,9 +59,9 @@ class MainActivity : AppCompatActivity() {
             try {
                 val prompt = "Translate '$query' to Hindi and English meanings"
 
-                // Initialize Gemini Client with hardcoded API key
+                // Initialize Gemini Client (hardcoded API key)
                 val client = Client.builder()
-                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // <-- replace with your key
+                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY")  // <-- replace with your key
                     .build()
 
                 // Wrap prompt in Content object
@@ -69,14 +69,15 @@ class MainActivity : AppCompatActivity() {
                     .text(prompt)
                     .build()
 
-                // Call Gemini model
+                // Java-style generateContent call
                 val response: GenerateContentResponse = client.models.generateContent(
-                    model = "gemini-2.5-flash",
-                    contents = listOf(content),
-                    config = null
+                    "gemini-2.5-flash",
+                    listOf(content),
+                    null
                 )
 
-                val resultText = response.text()
+                // Java-style getter for response text
+                val resultText = response.getText()
 
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
