@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Initialize views
         drawerLayout = findViewById(R.id.drawerLayout)
         etInput = findViewById(R.id.etInput)
         btnSearch = findViewById(R.id.btnSearch)
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Search button click
         btnSearch.setOnClickListener {
             val query = etInput.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -51,9 +53,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun performSearch(query: String) {
+        // Clear previous results and show loader
         resultContainer.removeAllViews()
         progressBar.visibility = View.VISIBLE
 
+        // Background network call
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val prompt = "Translate '$query' to Hindi and English meanings"
@@ -62,29 +66,32 @@ class MainActivity : AppCompatActivity() {
                     .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // Replace with your Gemini API key
                     .build()
 
-                // Latest Gemini API usage: string input
                 val response: GenerateContentResponse = client.models.generateContent(
                     "gemini-2.5-flash",
                     prompt,
                     null
                 )
 
-                // Extract result text
-                val resultText = response.text()
+                val resultText = response.text() ?: "No result"
 
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
+
                     val tv = TextView(this@MainActivity)
                     tv.text = resultText
                     tv.textSize = 18f
-                    tv.setPadding(8, 8, 8, 8)
+                    tv.setPadding(16, 16, 16, 16)
                     resultContainer.addView(tv)
                 }
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
-                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
