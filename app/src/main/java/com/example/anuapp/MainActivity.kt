@@ -56,10 +56,12 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Create Gemini client (reads GEMINI_API_KEY from environment)
-                val client = Client(apiKey = "AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY")  // <-- replace here
-
                 val prompt = "Translate '$query' to Hindi and English meanings"
+
+                // Initialize the Google Gen AI client
+                val client = Client.builder()
+                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // Replace with your actual API key
+                    .build()
 
                 val response: GenerateContentResponse = client.models.generateContent(
                     model = "gemini-2.5-flash",
