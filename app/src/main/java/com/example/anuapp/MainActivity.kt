@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.genai.Client
+import com.google.genai.types.Content
 import com.google.genai.types.GenerateContentResponse
 import kotlinx.coroutines.*
 
@@ -58,15 +59,21 @@ class MainActivity : AppCompatActivity() {
             try {
                 val prompt = "Translate '$query' to Hindi and English meanings"
 
-                // Initialize the Google Gen AI client
+                // Initialize Gemini Client with hardcoded API key
                 val client = Client.builder()
-                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // Replace with your actual API key
+                    .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // <-- replace with your key
                     .build()
 
+                // Wrap prompt in Content object
+                val content = Content.builder()
+                    .text(prompt)
+                    .build()
+
+                // Call Gemini model
                 val response: GenerateContentResponse = client.models.generateContent(
                     model = "gemini-2.5-flash",
-                    contents = prompt,
-                    options = null
+                    contents = listOf(content),
+                    config = null
                 )
 
                 val resultText = response.text()
