@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace "com.example.anuapp"
+    namespace 'com.example.anuapp'
     compileSdk 34
 
     defaultConfig {
@@ -13,12 +13,17 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
-
     }
-        packagingOptions {
+
+    buildTypes {
+        release {
+            minifyEnabled false // disable for debugging
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
         resources {
-            // Exclude problematic duplicate META-INF files
             excludes += [
                 'META-INF/INDEX.LIST',
                 'META-INF/DEPENDENCIES',
@@ -29,32 +34,13 @@ android {
             ]
         }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-    }
-
-    // Java compiler settings
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    // Kotlin compiler settings
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.25"
-    implementation "androidx.core:core-ktx:1.13.1"
-    implementation "androidx.appcompat:appcompat:1.7.0"
-    implementation "com.google.android.material:material:1.12.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.2.0"
-    // Gemini Java client
-    implementation 'com.google.genai:google-genai:1.20.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 
+    // Gemini AI SDK
+    implementation 'com.google.genai:google-genai:1.20.0'
 }
