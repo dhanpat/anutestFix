@@ -63,15 +63,15 @@ class MainActivity : AppCompatActivity() {
                     .apiKey("AIzaSyD3u55wGMkJmHHE0z5wVQ_0qyjUe1jg0wY") // <-- replace with your key
                     .build()
 
-                // Send prompt as string (simplest for Kotlin)
+                // Call Gemini with string prompt
                 val response: GenerateContentResponse = client.models.generateContent(
                     "gemini-2.5-flash",
                     prompt,
                     null
                 )
 
-                // Extract text from first candidate
-                val resultText = response.getCandidates()[0].getContent().getText()
+                // Extract text directly
+                val resultText = response.text()
 
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
